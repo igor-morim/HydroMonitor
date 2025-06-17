@@ -1,0 +1,506 @@
+/* ==========================================================================
+   RESPONSIVE STYLES - HYDROMONITOR WEBGIS
+   ========================================================================== */
+
+/* Breakpoints baseados em dispositivos comuns e tamanhos de viewport */
+/* Pequenos dispositivos (phones, 600px para baixo) */
+@media only screen and (max-width: 600px) {
+    /* Ajustes gerais de layout */
+    .app-container {
+        grid-template-areas:
+            "header header"
+            "main main"
+            "footer footer";
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto;
+    }
+
+    /* Sidebar - Transforma em menu mobile */
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        width: 80%;
+        max-width: 300px;
+        transform: translateX(-100%);
+        z-index: 1100;
+        transition: transform 0.3s ease;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .sidebar-toggle {
+        position: fixed;
+        left: 10px;
+        top: 10px;
+        z-index: 1200;
+        background-color: rgba(0, 0, 0, 0.7);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0;
+    }
+
+    /* Header - Ajustes para mobile */
+    .header {
+        padding: 5px 0;
+    }
+
+    .alert-bar {
+        padding: 5px 10px;
+        font-size: 0.8rem;
+    }
+
+    .alert-icon {
+        font-size: 1rem;
+    }
+
+    .toolbar {
+        padding: 0 10px;
+        flex-wrap: wrap;
+        height: auto;
+        padding-bottom: 5px;
+    }
+
+    .tool-button {
+        margin-right: 15px;
+        margin-bottom: 5px;
+        font-size: 1rem;
+    }
+
+    .tool-button span {
+        font-size: 0.6rem;
+    }
+
+    .logo-small {
+        height: 20px;
+        margin-left: 10px;
+    }
+
+    /* Main content - ajustes para mobile */
+    .main-content {
+        position: relative;
+    }
+
+    /* Painel oculto - esconde em mobile ou ajusta */
+    .hidden-panel {
+        display: none; /* Ou ajuste para uma versão mobile */
+    }
+
+    /* Footer - ajustes para mobile */
+    .footer {
+        padding: 5px 10px;
+        font-size: 0.7rem;
+        justify-content: center;
+    }
+
+    /* Menu de navegação - ajustes para mobile */
+    .nav-item {
+        padding: 10px 12px;
+        margin-bottom: 5px;
+    }
+
+    .nav-item i {
+        margin-right: 10px;
+        font-size: 1rem;
+    }
+
+    /* Área de assinatura de alertas */
+    .alert-subscription {
+        padding: 10px;
+        margin-bottom: 15px;
+    }
+
+    .subscribe-btn {
+        padding: 5px 10px;
+    }
+}
+
+/* Dispositivos médios (tablets portrait, 600px - 768px) */
+@media only screen and (min-width: 600px) and (max-width: 768px) {
+    /* Ajustes de sidebar */
+    .sidebar {
+        width: 250px;
+    }
+
+    /* Header - ajustes para tablets */
+    .toolbar {
+        padding: 0 15px;
+    }
+
+    .tool-button {
+        margin-right: 20px;
+        font-size: 1.1rem;
+    }
+
+    /* Painel oculto - ajuste de tamanho */
+    .hidden-panel {
+        width: 35px;
+    }
+
+    .hidden-panel:hover {
+        width: 130px;
+    }
+
+    /* Footer - ajustes */
+    .footer {
+        padding: 0 15px;
+    }
+}
+
+/* Dispositivos grandes (tablets landscape, 768px - 992px) */
+@media only screen and (min-width: 768px) and (max-width: 992px) {
+    /* Ajustes de sidebar */
+    .sidebar {
+        width: 280px;
+    }
+
+    /* Ajustes de toolbar */
+    .tool-button {
+        margin-right: 22px;
+    }
+
+    /* Painel oculto - ajuste de tamanho */
+    .hidden-panel {
+        width: 38px;
+    }
+
+    .hidden-panel:hover {
+        width: 140px;
+    }
+}
+
+/* Dispositivos extra grandes (desktops, 992px - 1200px) */
+@media only screen and (min-width: 992px) and (max-width: 1200px) {
+    /* Ajustes menores para desktops médios */
+    .sidebar {
+        width: 290px;
+    }
+
+    .tool-button {
+        margin-right: 23px;
+    }
+}
+
+/* Dispositivos extra extra grandes (desktops grandes, 1200px para cima) */
+@media only screen and (min-width: 1200px) {
+    /* Estilos otimizados para telas muito grandes */
+    .sidebar {
+        width: 300px;
+    }
+
+    .tool-button {
+        margin-right: 25px;
+    }
+}
+
+/* Orientação paisagem em dispositivos móveis */
+@media only screen and (max-width: 768px) and (orientation: landscape) {
+    /* Ajustes específicos para landscape em mobile */
+    .header {
+        height: auto;
+        min-height: 50px;
+    }
+
+    .alert-bar {
+        padding: 3px 10px;
+    }
+
+    .toolbar {
+        padding: 3px 10px;
+    }
+
+    .main-content {
+        height: calc(100vh - 90px); /* Ajusta altura considerando header e footer */
+    }
+}
+
+/* Dispositivos com hover (desktops) */
+@media (hover: hover) and (pointer: fine) {
+    /* Ajustes específicos para dispositivos que suportam hover */
+    .nav-item:hover {
+        background-color: rgba(52, 168, 83, 0.2);
+    }
+
+    .tool-button:hover {
+        opacity: 1;
+        transform: translateY(-2px);
+    }
+
+    .subscribe-btn:hover {
+        background-color: #f9a602;
+        transform: translateY(-2px);
+    }
+}
+
+/* Dispositivos touch (sem hover) */
+@media (hover: none) and (pointer: coarse) {
+    /* Ajustes para dispositivos touch */
+    .nav-item:active {
+        background-color: rgba(52, 168, 83, 0.2);
+    }
+
+    .tool-button:active {
+        opacity: 1;
+        transform: translateY(-2px);
+    }
+
+    .subscribe-btn:active {
+        background-color: #f9a602;
+        transform: translateY(-2px);
+    }
+
+    /* Aumenta áreas de toque para mobile */
+    .nav-item {
+        padding: 15px 20px;
+    }
+
+    .tool-button {
+        padding: 10px;
+        margin-right: 15px;
+    }
+
+    .alert-close {
+        padding: 10px;
+    }
+}
+
+/* Telas de alta densidade (Retina) */
+@media 
+only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (min-resolution: 192dpi) {
+    /* Otimizações para telas retina */
+    .logo {
+        background-image: url('../img/logo@2x.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    .logo-small {
+        background-image: url('../img/logo-small@2x.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+}
+
+/* Modo escuro preferido */
+@media (prefers-color-scheme: dark) {
+    /* Ajustes adicionais para modo escuro */
+    body {
+        background-color: #121212;
+    }
+
+    .sidebar {
+        background-color: rgba(20, 20, 20, 0.95);
+    }
+
+    .header, .footer {
+        background-color: rgba(30, 30, 30, 0.95);
+    }
+}
+
+/* Impressão */
+@media print {
+    /* Estilos para impressão */
+    .app-container {
+        display: block;
+    }
+
+    .sidebar, .hidden-panel, .sidebar-toggle, .alert-bar, .footer {
+        display: none;
+    }
+
+    .main-content {
+        height: auto;
+    }
+
+    .map-container {
+        height: 500px; /* Altura fixa para impressão */
+        page-break-inside: avoid;
+    }
+}
+
+/* ==========================================================================
+   AJUSTES ESPECÍFICOS PARA COMPONENTES EM DIFERENTES TAMANHOS DE TELA
+   ========================================================================== */
+
+/* Ajustes para a mensagem de alerta em telas pequenas */
+@media only screen and (max-width: 400px) {
+    .alert-message {
+        font-size: 0.7rem;
+    }
+
+    .alert-icon {
+        font-size: 0.9rem;
+    }
+}
+
+/* Ajustes para tablets em portrait */
+@media only screen and (min-width: 600px) and (max-width: 768px) and (orientation: portrait) {
+    .sidebar {
+        width: 220px;
+    }
+
+    .toolbar {
+        flex-wrap: wrap;
+    }
+
+    .tool-button {
+        margin-bottom: 5px;
+    }
+}
+
+/* Ajustes para telas muito grandes (acima de 1600px) */
+@media only screen and (min-width: 1600px) {
+    :root {
+        --sidebar-width: 350px;
+        --header-height: 70px;
+    }
+
+    .nav-item {
+        padding: 15px 20px;
+        font-size: 1.1rem;
+    }
+
+    .tool-button {
+        font-size: 1.3rem;
+    }
+
+    .tool-button span {
+        font-size: 0.8rem;
+    }
+}
+
+/* ==========================================================================
+   AJUSTES PARA DISPOSITIVOS ESPECÍFICOS
+   ========================================================================== */
+
+/* iPhone 5/SE */
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) and (-webkit-min-device-pixel-ratio: 2) {
+    .sidebar {
+        width: 75%;
+    }
+
+    .alert-message {
+        font-size: 0.65rem;
+    }
+}
+
+/* iPad em portrait */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) {
+    .sidebar {
+        width: 250px;
+    }
+
+    .toolbar {
+        padding: 0 10px;
+    }
+}
+
+/* iPad em landscape */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) {
+    .sidebar {
+        width: 280px;
+    }
+
+    .tool-button {
+        margin-right: 20px;
+    }
+}
+
+/* Surface Duo */
+@media only screen and (min-device-width: 540px) and (max-device-width: 720px) {
+    .sidebar {
+        width: 220px;
+    }
+
+    .toolbar {
+        flex-wrap: wrap;
+    }
+}
+
+/* ==========================================================================
+   AJUSTES PARA FUNCIONALIDADES ESPECÍFICAS
+   ========================================================================== */
+
+/* Quando o JavaScript está desabilitado */
+.no-js {
+    .sidebar {
+        transform: translateX(0);
+    }
+
+    .sidebar-toggle {
+        display: none;
+    }
+}
+
+/* Quando o usuário prefere movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .hidden-panel {
+        transition: none;
+    }
+
+    .sidebar {
+        transition: none;
+    }
+}
+
+/* ==========================================================================
+   UTILITÁRIOS RESPONSIVOS
+   ========================================================================== */
+
+/* Classes utilitárias para mostrar/ocultar elementos em diferentes breakpoints */
+.visible-mobile {
+    display: none;
+}
+
+@media only screen and (max-width: 768px) {
+    .visible-mobile {
+        display: block;
+    }
+
+    .hidden-mobile {
+        display: none;
+    }
+}
+
+.visible-tablet {
+    display: none;
+}
+
+@media only screen and (min-width: 600px) and (max-width: 992px) {
+    .visible-tablet {
+        display: block;
+    }
+
+    .hidden-tablet {
+        display: none;
+    }
+}
+
+.visible-desktop {
+    display: none;
+}
+
+@media only screen and (min-width: 992px) {
+    .visible-desktop {
+        display: block;
+    }
+
+    .hidden-desktop {
+        display: none;
+    }
+}

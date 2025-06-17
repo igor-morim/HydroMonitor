@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./img/Logo_HydroMonitor.svg" type="image/svg+xml">
+    <title>HydroMonitor - WebGIS de Monitoramento Hidrológico</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <!--Bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+        :root {
+        --primary-color: #1a73e8;
+        --secondary-color: #34a853;
+        --alert-color: #fbbc05;
+        --danger-color: #ea4335;
+        --dark-color: #202124;
+        --light-color: #f8f9fa;
+        --sidebar-width: 250px;
+        --header-height: 60px;
+        --footer-height: 40px;
+        --transition-speed: 0.3s;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+    }    
+
+    .parent {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        grid-template-rows: auto auto 25fr 1fr;
+        background-color: var(--dark-color);
+        font-family: 'Roboto', sans-serif;
+        color: white;
+        height: 100vh;
+        overflow: hidden;
+    }
+        
+    .div1 {
+        grid-row: 1 / -1;
+        background-color: rgba(26, 32, 44, 0.9);
+        backdrop-filter: blur(10px);
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all var(--transition-speed) ease;
+        z-index: 1000;
+    }
+
+    .div1.collapsed {
+        width: 70px;
+        overflow: hidden;
+    }
+
+    .div1.collapsed .logo,
+    .div1.collapsed .nav-item span,
+    .div1.collapsed .alert-subscription {
+        display: none;
+    }
+
+    .div1.collapsed .nav-item {
+        justify-content: center;
+        padding: 12px 0;
+    }
+
+    .div1.collapsed .sidebar-toggle {
+        align-self: center;
+        margin-right: 0;
+    }
+
+    .div1.collapsed .logo-container {
+        margin-bottom: 20px;
+    }
+
+    .sidebar-toggle {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        margin-bottom: 1px;
+        align-self: flex-end;
+    }
+
+    .logo-container {
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .logo {
+        max-width: 70%;
+        height: auto;
+        filter: drop-shadow(0 0 5px rgba(52, 168, 83, 0.5));
+    }
+
+    .nav-menu {
+        flex-grow: 1;
+    }
+
+    .nav-menu a {
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        align-items: center;
+        padding: 12px 15px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .nav-menu a:hover {
+        background-color: rgba(52, 168, 83, 0.2);
+    }
+
+    .nav-menu a.active {
+        background-color: var(--secondary-color);
+    }
+
+    .nav-menu a i {
+        margin-right: 15px;
+        font-size: 1.2rem;
+    }
+
+    .alert-subscription {
+        background-color: rgba(251, 188, 5, 0.1);
+        border: 1px dashed var(--alert-color);
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: auto;
+        margin-bottom: 20px;
+    }
+
+    .alert-subscription h3 {
+        font-size: 1rem;
+        margin-bottom: 10px;
+        color: var(--alert-color);
+    }
+
+    .alert-subscription p {
+        font-size: 0.8rem;
+        margin-bottom: 15px;
+        opacity: 0.8;
+    }
+
+    .subscribe-btn {
+        background-color: var(--alert-color);
+        color: var(--dark-color);
+        border: none;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-weight: 500;
+        cursor: pointer;
+        width: 100%;
+        transition: all 0.2s ease;
+    }
+
+    .subscribe-btn:hover {
+        background-color: #f9a602;
+        transform: translateY(-2px);
+    }
+
+    .div2 {
+        grid-column: 2;
+        background-color: rgba(234, 67, 53, 0.2);
+        padding: 6px 6px 6px 6px;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid rgba(234, 68, 53, 0.486);
+        height: auto;
+        margin: 5px;
+    }
+
+    .alert-icon {
+        color: white;
+        margin-right: 10px;
+        font-size: 0.8rem;
+    }
+
+    .alert-message-container {
+        overflow: hidden;
+        white-space: nowrap;
+        width: 100%;
+    }
+
+    .alert-message-scroll {
+        display: inline-block;
+        padding-left: 100%;
+        animation: scrollText 20s linear infinite;
+    }
+
+    @keyframes scrollText {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-100%); }
+    }
+
+    .alert-close {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        opacity: 0.7;
+        padding: 0px 0px 0px 10px;
+    }
+
+    .alert-close:hover {
+        opacity: 1;
+    }
+
+    .div3 {
+        grid-column: 2;
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+        height: auto;
+    }
+
+    .tool-button {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.0rem;
+        margin-top: 3px;
+        margin-right: 25px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        opacity: 0.6;
+        transition: all 0.2s ease;
+    }
+
+    .tool-button:hover {
+        opacity: 1;
+        transform: translateY(-3px);
+    }
+
+    .tool-button span {
+        margin-top: 3px;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .tool-button.active {
+        opacity: 1;
+        color: var(--secondary-color);
+    }
+
+    .spacer {
+        flex-grow: 2;
+    }
+
+    .logo-small {
+        height: 30px;
+        margin-left: 20px;
+        opacity: 0.8;
+    }
+
+    .div4 {
+        grid-column: 2;
+        grid-row: 3;
+        min-height: 0;
+    }
+
+    .div5 {
+        grid-column: 2;
+        grid-row: 4;
+        min-height: 0;
+        background-color: rgba(32, 33, 36, 0.9);
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0 20px;
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.6);
+        border-top: 1px solid rgba(255, 255, 255);
+    }
+</style>
+</head>
+
+<body>
+    <div class="parent">
+        <div class="div1">
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="logo-container">
+                <span class="logo">HydroMonitor</span>
+            </div>
+
+            <nav class="nav-menu" role="navigation">
+                <!--<a href="#" class="nav-item active">
+                    <i class="fas fa-map"></i>
+                    <span>Mapa Principal</span>-->
+                </a>
+                <a href="./Mapas/mapa_SIMA.html" class="nav-item" target="Frame_FOCOS">
+                    <i class="fas fa-water"></i>
+                    <span>Níveis de Rios</span>
+                </a>
+                <a href="./Mapas/queimadas.html" class="nav-item" target="Frame_FOCOS">
+                    <i class="fas fa-cloud-rain"></i>
+                    <span>Precipitação</span>
+                </a>
+                <a href="./Mapas/queimadas.html" class="nav-item" target="Frame_FOCOS">
+                    <i class="fas fa-fire"></i>
+                    <span>Queimadas</span>
+                </a>
+                <a href="./Mapas/queimadas.html" class="nav-item" target="Frame_FOCOS">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Histórico</span>
+                </a>
+                <a href="./Mapas/sobre.html" class="nav-item" target="Frame_FOCOS">
+                    <i class="fas fa-cog"></i>
+                    <span>Sobre</span>
+                </a>
+            </nav>
+
+            <div class="alert-subscription">
+                <h3>Receba Alertas em Tempo Real</h3>
+                <p>Cadastre-se para receber notificações sobre eventos hidrológicos críticos.</p>
+                <button class="subscribe-btn">Assinar Alertas</button>
+            </div>
+        </div>
+
+        <div class="div2">
+            <i class="fas fa-exclamation-triangle alert-icon"></i>
+            <div class="alert-message-container">
+                <div class="alert-message-scroll">
+                    ALERTA: Nível do Rio Itapecuru atinge cota de emergência em Codó. Áreas de risco devem ser evacuadas. | ATENÇÃO SECA: O rio Itapecuru no trecho do município de Caxias atinge nível de seca.
+                </div>
+            </div>
+            <button class="alert-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="div3">
+            <button class="tool-button active">
+                <i class="fas fa-water"></i>
+                <span>Hidrológico</span>
+            </button>
+            <button class="tool-button">
+                <i class="fas fa-cloud-rain"></i>
+                <span>Chuva</span>
+            </button>
+            <button class="tool-button">
+                <i class="fas fa-fire"></i>
+                <span>Queimadas</span>
+            </button>
+            <button class="tool-button">
+                <i class="fas fa-info-circle"></i>
+                <span>Sobre</span>
+            </button>
+            
+            <div class="spacer"></div>
+            
+            <img src="img/Logo_HydroMonitor.svg" alt="Logo HydroMonitor" class="logo-small">
+            <img src="img/ANA.png" alt="Logo ANA" class="logo-small">
+            <img src="img/MARCA GOV SEMA BRANCA_RECORTE.png" alt="Logo Governo" class="logo-small">
+        </div>
+
+        <div class="div4">
+            <iframe name="Frame_FOCOS" src="./Mapas/mapa_SIMA.html" loading="lazy" width="100%" height="100%" frameborder="0">
+                <p>Seu navegador não suporta iframes. <a href="./Mapas/mapa_SIMA.html">Acesse o mapa diretamente</a>.</p>
+            </iframe>
+        </div>
+        
+        <div class="div5">
+            <div class="footer-content">
+                <span>HydroMonitor v2.0 | Dados atualizados em tempo real | Última atualização: <span id="update-time">16/06/2023 14:30</span></span>
+            </div>
+        </div>
+    </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Alternar barra lateral
+        const toggleButton = document.querySelector('.sidebar-toggle');
+        const sidebar = document.querySelector('.div1');
+        
+        toggleButton.addEventListener('click', function() {
+            sidebar.classList.toggle('collapsed');
+            
+            const icon = this.querySelector('i');
+            if (sidebar.classList.contains('collapsed')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+                document.querySelector('.parent').style.gridTemplateColumns = '80px 1fr';
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+                document.querySelector('.parent').style.gridTemplateColumns = '250px 1fr';
+            }
+        });
+
+        // Ativar itens do menu
+        const navItems = document.querySelectorAll('.nav-menu a');
+        
+        navItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                navItems.forEach(navItem => {
+                    navItem.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                const targetFrame = this.getAttribute('target');
+                if (targetFrame) {
+                    const iframe = document.querySelector(`iframe[name="${targetFrame}"]`);
+                    if (iframe) iframe.src = this.href;
+                }
+            });
+        });
+
+        // Ativar botões de ferramentas
+        const toolButtons = document.querySelectorAll('.tool-button');
+        toolButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                toolButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Fechar alerta
+        const alertClose = document.querySelector('.alert-close');
+        if (alertClose) {
+            alertClose.addEventListener('click', function() {
+                document.querySelector('.div2').style.display = 'none';
+                document.querySelector('.parent').style.gridTemplateRows = 'auto 1fr auto';
+            });
+        }
+
+        // Atualizar hora
+        function updateDateTime() {
+            const now = new Date();
+            document.getElementById('update-time').textContent = 
+                now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR');
+        }
+        updateDateTime();
+        setInterval(updateDateTime, 60000);
+    });
+</script>
+</body>
+</html>
